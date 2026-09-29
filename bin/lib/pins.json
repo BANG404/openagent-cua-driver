@@ -1,0 +1,32 @@
+{
+  "repository": "https://github.com/trycua/cua",
+  "release": "cua-driver-rs-v0.30.1",
+  "version": "0.30.1",
+  "platforms": {
+    "windows-x86_64": {
+      "asset": "cua-driver-rs-0.30.1-windows-x86_64-binary.zip",
+      "sha256": "96ebb5996c0e25adf40ed648a46959723d31df5d90f24ffe2fb2d3cc2ee780be",
+      "executable": "cua-driver.exe"
+    },
+    "windows-arm64": {
+      "asset": "cua-driver-rs-0.30.1-windows-arm64-binary.zip",
+      "sha256": "d82a6c1523e909dbffdf28a41a6be64de31874b6f671c8cb344d857553708a85",
+      "executable": "cua-driver.exe"
+    },
+    "darwin-universal": {
+      "asset": "cua-driver-rs-0.30.1-darwin-universal-binary.tar.gz",
+      "sha256": "463d64ba749a2912b1506ce6980210544f404ab3fad1c13cb6768749bc854ec2",
+      "executable": "cua-driver"
+    },
+    "linux-x86_64": {
+      "asset": "cua-driver-rs-0.30.1-linux-x86_64-binary.tar.gz",
+      "sha256": "82411700ae43fa34f6263eb603866c77d4e25e5556ffa03d92cd79cbab9472a2",
+      "executable": "cua-driver"
+    },
+    "linux-arm64": {
+      "asset": "cua-driver-rs-0.30.1-linux-arm64-binary.tar.gz",
+      "sha256": "4dd8c42aaad592b8bd5ab825b5cd576bb2569e3ef14a99f63b445637dd8a0d2d",
+      "executable": "cua-driver"
+    }
+  }
+}

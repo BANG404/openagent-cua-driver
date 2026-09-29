@@ -1,0 +1,2 @@
+# Release assets are built by `bun run pack` and attached to a GitHub release.
+openagent-cua-driver-v*.tar.gz

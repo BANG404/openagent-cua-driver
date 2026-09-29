@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "cua-driver",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Desktop control through the OpenAgent Cua Driver daemon.",
   "license": "MIT",
   "repository": "https://github.com/BANG404/openagent-cua-driver",
@@ -9,7 +9,7 @@
   "extensions": {
     "openagent": {
       "runtime": "cua-driver",
-      "capabilities": ["daemon", "mcp", "desktop-control"],
+      "capabilities": ["daemon", "mcp", "desktop-control", "network"],
       "daemon": {
         "command": "bin/cua-driver.mjs",
         "args": ["serve", "--embedded"],

@@ -1,0 +1,16 @@
+{
+  "name": "openagent-cua-driver-plugin",
+  "version": "1.1.0",
+  "private": true,
+  "type": "module",
+  "description": "The OpenAgent Agent Plugin package that provides Cua desktop control.",
+  "license": "MIT",
+  "scripts": {
+    "test": "bun test",
+    "pack": "bun scripts/pack.mjs"
+  },
+  "engines": {
+    "bun": ">=1.2.0",
+    "node": ">=18.17.0"
+  }
+}
