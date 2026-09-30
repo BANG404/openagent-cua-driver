@@ -9,6 +9,16 @@ Install or update this package from its GitHub repository in OpenAgent. The
 package follows Agent Plugins 1.0.0 and the OpenAgent
 `extensions.openagent.runtime` and `daemon` contracts.
 
+## Desktop authorization
+
+The `desktop-control` capability is a request, not a permission grant. OpenAgent
+shows a per-plugin **Allow real computer access** control for this package. The
+daemon starts only after the user enables that control; without it, the Runtime
+keeps the process under the standard managed plugin sandbox and refuses a Cua
+daemon launch that cannot operate the interactive desktop. This is the same
+authorization contract used by every plugin that requests `desktop-control`,
+`host-access`, or `computer-use`.
+
 ## How the driver is provided
 
 This package ships a launcher, not a driver. `bin/cua-driver.mjs` is what
@@ -86,7 +96,7 @@ report it if you hit one.
 ## What the host supplies
 
 The desktop host supervises the daemon and owns the product policy that is not
-the package's to decide: the private endpoint, the permission mode, and the
+the package's to decide: the private endpoint, the user authorization, and the
 parent-liveness contract. It passes two things the launcher needs — the
 `PLUGIN_DATA` directory above, and the endpoint on the command line — and never
 a driver binary. That is the whole reason the launcher exists.
