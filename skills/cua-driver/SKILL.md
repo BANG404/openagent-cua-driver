@@ -5,9 +5,9 @@ description: Use the OpenAgent Cua Driver plugin when a task requires controlled
 
 # Cua Driver
 
-Cua Driver is provided through the `cua-driver` Runtime binding. Keep desktop
-control requests inside the host-supervised daemon and reserved MCP client so
-permissions, endpoint ownership, and parent liveness remain enforced.
+Cua Driver is an ordinary Agent Plugin package. Keep desktop-control requests
+inside the host-supervised daemon and reserved MCP client so permissions,
+endpoint ownership, and parent liveness remain enforced.
 
 The manifest's `desktop-control` capability requests access to the real computer
 environment; it does not grant access. The user must explicitly enable the

@@ -8,7 +8,6 @@
   "keywords": ["openagent", "cua", "desktop-control", "daemon"],
   "extensions": {
     "openagent": {
-      "runtime": "cua-driver",
       "capabilities": ["daemon", "mcp", "desktop-control", "network"],
       "daemon": {
         "command": "bin/cua-driver.mjs",

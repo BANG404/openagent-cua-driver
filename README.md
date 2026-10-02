@@ -1,13 +1,12 @@
 # OpenAgent Cua Driver
 
 The standard Agent Plugin package for OpenAgent desktop control. It declares
-the `cua-driver` Runtime binding and the portable socket daemon contract so
-Cua uses the same plugin identity and capability model as other OpenAgent
-plugins.
+the portable socket daemon contract and uses the same plugin identity and
+capability model as every other OpenAgent package.
 
 Install or update this package from its GitHub repository in OpenAgent. The
-package follows Agent Plugins 1.0.0 and the OpenAgent
-`extensions.openagent.runtime` and `daemon` contracts.
+package follows Agent Plugins 1.0.0 and the OpenAgent generic
+`extensions.openagent` and `daemon` contracts.
 
 ## Desktop authorization
 
