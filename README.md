@@ -81,6 +81,15 @@ with an error, an asset whose digest is not the pinned one, an archive that
 does not contain the driver, and a driver that will not start. Set
 `OPENAGENT_CUA_DRIVER_BIN` to run an existing driver through any of them.
 
+## Language support
+
+The package declares English and Chinese in `plugin.json`. The launcher reads
+the current OpenAgent language through the versioned `locale.get` host
+operation when it reports download, preparation, or startup notices. Plugin
+metadata and launcher-generated failures are translated; upstream driver
+output, executable paths, platform IDs, and diagnostic codes keep their
+original values.
+
 ### Which digests were checked, and how
 
 `windows-x86_64` and `linux-x86_64` were downloaded and their SHA-256 measured

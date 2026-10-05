@@ -31,13 +31,29 @@
 import { spawn } from "node:child_process";
 
 import { provisionDriver, readPins } from "./lib/provision.mjs";
+import { createHostClient } from "./lib/openagent-host.mjs";
+import { defaultLocale, errorNotice, noticeText, requestLocale, translateNotice } from "./i18n.mjs";
 
 /** Fetch the driver and exit, instead of running it. */
 const PREPARE = "--openagent-prepare";
 
 const override = (process.env.OPENAGENT_CUA_DRIVER_BIN ?? "").trim();
+let localeHost = null;
+try {
+  localeHost = createHostClient();
+} catch {
+  // Running this package outside OpenAgent uses its declared default language.
+}
 
-async function driverPath() {
+async function currentLocale() {
+  try {
+    return await requestLocale({}, localeHost);
+  } catch {
+    return defaultLocale;
+  }
+}
+
+async function driverPath(locale) {
   if (override) {
     return override;
   }
@@ -56,7 +72,9 @@ async function driverPath() {
     platform: process.platform,
     arch: process.arch,
     pins,
-    log: (message) => console.error(`[cua-driver] ${message}`),
+    log: (message) => {
+      console.error(`[cua-driver] ${translateNotice(message, locale) ?? message}`);
+    },
   });
   return path;
 }
@@ -65,9 +83,9 @@ const args = process.argv.slice(2);
 
 let executable;
 try {
-  executable = await driverPath();
+  executable = await driverPath(await currentLocale());
 } catch (error) {
-  console.error(`Unable to start Cua Driver: ${error.message}`);
+  console.error(errorNotice(error, await currentLocale()));
   process.exit(1);
 }
 
@@ -75,7 +93,7 @@ if (args.includes(PREPARE)) {
   // Only reachable when the driver resolved: the whole point of this mode is
   // that the answer is a verified executable on disk, so a caller can start the
   // daemon afterwards knowing the launch has nothing left to fetch.
-  console.error(`[cua-driver] prepared ${executable}`);
+  console.error(`[cua-driver] ${noticeText("notice.prepared", { path: executable }, await currentLocale())}`);
   process.exit(0);
 }
 
@@ -84,9 +102,12 @@ const child = spawn(executable, args, {
   windowsHide: true,
 });
 
-child.on("error", (error) => {
-  const hint = override ? " (from OPENAGENT_CUA_DRIVER_BIN)" : "";
-  console.error(`Unable to start Cua Driver: ${error.message}${hint}`);
+child.on("error", async (error) => {
+  const source = override ? "OPENAGENT_CUA_DRIVER_BIN" : "PLUGIN_DATA cache";
+  console.error(noticeText("notice.startFailed", {
+    code: error.code ?? error.name ?? "UNKNOWN",
+    source,
+  }, await currentLocale()));
   process.exitCode = 1;
 });
 

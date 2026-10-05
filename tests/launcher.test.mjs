@@ -1,5 +1,6 @@
 import { describe, expect, test } from "bun:test";
-import { spawnSync } from "node:child_process";
+import { spawn, spawnSync } from "node:child_process";
+import { createServer } from "node:http";
 import { join } from "node:path";
 
 const LAUNCHER = join(import.meta.dir, "..", "bin", "cua-driver.mjs");
@@ -12,6 +13,21 @@ function run(args, environment = {}) {
   return spawnSync(process.execPath, [LAUNCHER, ...args], {
     encoding: "utf8",
     env: { ...process.env, PLUGIN_DATA: "", ...environment },
+  });
+}
+
+function runAsync(args, environment = {}) {
+  return new Promise((resolve, reject) => {
+    const child = spawn(process.execPath, [LAUNCHER, ...args], {
+      env: { ...process.env, PLUGIN_DATA: "", ...environment },
+      stdio: ["ignore", "pipe", "pipe"],
+    });
+    let stdout = "";
+    let stderr = "";
+    child.stdout.setEncoding("utf8").on("data", (chunk) => { stdout += chunk; });
+    child.stderr.setEncoding("utf8").on("data", (chunk) => { stderr += chunk; });
+    child.once("error", reject);
+    child.once("close", (code) => resolve({ code, stdout, stderr }));
   });
 }
 
@@ -45,6 +61,28 @@ describe("the launcher", () => {
     expect(result.status).toBe(0);
     expect(result.stdout).toBe("");
     expect(result.stderr).toContain("prepared");
+  });
+
+  test("uses the live host locale for launcher notices", async () => {
+    const host = createServer(async (request, response) => {
+      for await (const _chunk of request) {}
+      response.writeHead(200, { "content-type": "application/json" });
+      response.end(JSON.stringify({ ok: true, result: { version: 1, locale: "zh-CN" } }));
+    });
+    await new Promise((resolve) => host.listen(0, "127.0.0.1", resolve));
+    try {
+      const result = await runAsync(["--openagent-prepare"], {
+        OPENAGENT_CUA_DRIVER_BIN: process.execPath,
+        OPENAGENT_PLUGIN_HOST_URL: `http://127.0.0.1:${host.address().port}/bridge`,
+        OPENAGENT_PLUGIN_HOST_TOKEN: "test-token",
+        OPENAGENT_PLUGIN_ID: "cua-driver",
+      });
+      expect(result.code).toBe(0);
+      expect(result.stdout).toBe("");
+      expect(result.stderr).toContain("已准备 Cua Driver");
+    } finally {
+      await new Promise((resolve) => host.close(resolve));
+    }
   });
 
   test("prepares without starting the driver, and never forwards the flag", () => {

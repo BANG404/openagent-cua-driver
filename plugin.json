@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "cua-driver",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "Desktop control through the OpenAgent Cua Driver daemon.",
   "license": "MIT",
   "repository": "https://github.com/BANG404/openagent-cua-driver",
@@ -9,6 +9,52 @@
   "extensions": {
     "openagent": {
       "capabilities": ["daemon", "mcp", "desktop-control", "network"],
+      "i18n": {
+        "supported_locales": ["en", "zh"],
+        "default_locale": "en",
+        "translations": {
+          "en": {
+            "display_name": "Cua Driver",
+            "description": "Desktop control through the OpenAgent Cua Driver daemon.",
+            "notice.pluginData": "PLUGIN_DATA is not set, so this launcher has nowhere to keep the driver it downloads. The OpenAgent host exports it as the package's own writable directory; set it to a writable empty directory to run this package outside OpenAgent, or set OPENAGENT_CUA_DRIVER_BIN to a Cua Driver already on this machine.",
+            "notice.unsupportedPlatform": "Cua Driver publishes no pinned release for {platform}. Pinned platforms: {supported}. Set OPENAGENT_CUA_DRIVER_BIN to a driver built for this machine to run one anyway.",
+            "notice.pinnedTable": "The pinned table has no entry for '{platform}'. Pinned platforms: {supported}. Set OPENAGENT_CUA_DRIVER_BIN to a driver built for this machine to run one anyway.",
+            "notice.archiveType": "The pin for '{platform}' names '{asset}', which is not a supported archive",
+            "notice.executableMissing": "'{asset}' does not contain '{executable}'",
+            "notice.provisionFailed": "Cua Driver {version} could not be provisioned for {platform}. Check network access and the plugin data directory; the download is {url} and its cache directory is {release}.",
+            "notice.installFailed": "Cua Driver {version} could not be installed under {release}. Stop any other OpenAgent process using this driver, then retry.",
+            "notice.downloadStatus": "the download answered {status} {text}",
+            "notice.declaredLimit": "the download declares {size} bytes, beyond the accepted limit",
+            "notice.returnedLimit": "the download returned {size} bytes, beyond the accepted limit",
+            "notice.digestMismatch": "the asset digest is {actual}, not the pinned {expected}, so the release has changed under this package's pin and nothing was installed",
+            "notice.fetching": "fetching Cua Driver {version} for {platform} from {url}",
+            "notice.prepared": "prepared Cua Driver at {path}",
+            "notice.startFailed": "Unable to start Cua Driver ({code}) from {source}; check the driver installation and platform support",
+            "notice.archiveInvalid": "The downloaded archive is invalid; verify the pinned release and retry",
+            "notice.unexpected": "Cua Driver operation failed ({code})"
+          },
+          "zh": {
+            "display_name": "Cua Driver",
+            "description": "通过 OpenAgent Cua Driver 守护进程控制桌面。",
+            "notice.pluginData": "未设置 PLUGIN_DATA，启动器没有位置保存下载的驱动。OpenAgent 主机会将它设为插件专用的可写目录；若要在 OpenAgent 外运行，请将其设为可写的空目录，或将 OPENAGENT_CUA_DRIVER_BIN 设为本机已有的 Cua Driver 路径。",
+            "notice.unsupportedPlatform": "Cua Driver 没有为 {platform} 提供固定版本。支持的平台：{supported}。若要在此设备运行，请将 OPENAGENT_CUA_DRIVER_BIN 指向为本机编译的驱动。",
+            "notice.pinnedTable": "固定版本表中没有平台“{platform}”的条目。支持的平台：{supported}。若要在此设备运行，请将 OPENAGENT_CUA_DRIVER_BIN 指向为本机编译的驱动。",
+            "notice.archiveType": "平台“{platform}”的固定版本指定了“{asset}”，但它不是支持的压缩包格式",
+            "notice.executableMissing": "“{asset}”中不包含“{executable}”",
+            "notice.provisionFailed": "无法为 {platform} 准备 Cua Driver {version}。请检查网络连接和插件数据目录；下载地址为 {url}，缓存目录为 {release}。",
+            "notice.installFailed": "无法将 Cua Driver {version} 安装到 {release}。请停止正在使用此驱动的其他 OpenAgent 进程，然后重试。",
+            "notice.downloadStatus": "下载返回了 {status} {text}",
+            "notice.declaredLimit": "下载声明的大小为 {size} 字节，超过允许上限",
+            "notice.returnedLimit": "下载返回的大小为 {size} 字节，超过允许上限",
+            "notice.digestMismatch": "文件摘要为 {actual}，与固定摘要 {expected} 不符；发布文件可能已变更，未安装任何文件",
+            "notice.fetching": "正在从 {url} 下载适用于 {platform} 的 Cua Driver {version}",
+            "notice.prepared": "已准备 Cua Driver：{path}",
+            "notice.startFailed": "无法从 {source} 启动 Cua Driver（{code}）；请检查驱动安装和平台支持情况",
+            "notice.archiveInvalid": "下载的压缩包无效；请检查固定版本的发布文件后重试",
+            "notice.unexpected": "Cua Driver 操作失败（{code}）"
+          }
+        }
+      },
       "daemon": {
         "command": "bin/cua-driver.mjs",
         "args": ["serve", "--embedded"],
