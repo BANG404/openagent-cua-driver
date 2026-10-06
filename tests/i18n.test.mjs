@@ -24,4 +24,8 @@ test("Cua Driver uses the current locale for process notices", async () => {
     .toBe("正在从 https://example.test/driver.zip 下载适用于 windows-x86_64 的 Cua Driver 1.2.2");
   expect(errorNotice(new Error("the download declares 200 bytes, beyond the accepted limit"), "zh"))
     .toBe("下载声明的大小为 200 字节，超过允许上限");
+  expect(translateNotice("updated Cua Driver to 0.34.0", "zh"))
+    .toBe("已将 Cua Driver 更新至 0.34.0");
+  expect(translateNotice("Cua Driver automatic update failed; using the last verified driver", "zh"))
+    .toBe("Cua Driver 自动更新失败；继续使用上次校验通过的驱动");
 });

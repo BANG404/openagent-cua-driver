@@ -9,7 +9,7 @@
  * verified driver behind that command line.
  *
  * The driver itself is not in this package. Upstream publishes one build per
- * platform, and this package pins the asset and digest it was reviewed against,
+ * platform. Preparation follows verified stable releases with a pinned fallback,
  * so a launcher that has to fetch what it runs must not write into the package
  * it was loaded from: the host exports `PLUGIN_DATA` for that, and the cache
  * lives there. `OPENAGENT_CUA_DRIVER_BIN` overrides the whole mechanism for a
@@ -30,7 +30,8 @@
 
 import { spawn } from "node:child_process";
 
-import { provisionDriver, readPins } from "./lib/provision.mjs";
+import { readPins } from "./lib/provision.mjs";
+import { resolveDriver } from "./lib/update.mjs";
 import { createHostClient } from "./lib/openagent-host.mjs";
 import { defaultLocale, errorNotice, noticeText, requestLocale, translateNotice } from "./i18n.mjs";
 
@@ -67,11 +68,12 @@ async function driverPath(locale) {
     );
   }
   const pins = readPins();
-  const { path } = await provisionDriver({
+  const { path } = await resolveDriver({
     dataRoot,
     platform: process.platform,
     arch: process.arch,
     pins,
+    checkUpdates: process.argv.includes(PREPARE),
     log: (message) => {
       console.error(`[cua-driver] ${translateNotice(message, locale) ?? message}`);
     },

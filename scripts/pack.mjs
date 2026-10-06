@@ -33,6 +33,7 @@ const CONTENTS = [
   "bin/lib/openagent-host.mjs",
   "bin/lib/platform.mjs",
   "bin/lib/provision.mjs",
+  "bin/lib/update.mjs",
   "bin/lib/pins.json",
   "skills/cua-driver/SKILL.md",
 ];

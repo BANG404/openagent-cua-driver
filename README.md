@@ -27,22 +27,20 @@ reserved MCP client — and it resolves the actual program in this order:
 1. **`OPENAGENT_CUA_DRIVER_BIN`**, when set. The variable names a Cua Driver
    the user already has, for example one built from source or installed by the
    upstream installer, and nothing else is consulted.
-2. **The verified cache** under `PLUGIN_DATA/driver/<sha256>/`, where
+2. **The automatically updated, verified cache** under `PLUGIN_DATA/driver/<sha256>/`, where
    `PLUGIN_DATA` is the writable directory OpenAgent gives the package. A
    release is reused only while its recorded digests still match the files on
    disk; anything else is replaced.
-3. **A download** of the pinned upstream release for this platform, described
+3. **A download** of the selected upstream release, with the built-in fallback described
    by `bin/lib/pins.json`. The archive's SHA-256 is checked against the pin
    before anything is extracted, and the extraction runs from a staging
    directory so a failure never leaves a half-installed driver behind.
 
-`bin/lib/pins.json` names one asset and digest per platform. It exists so the
-program that runs is the one this package was reviewed against rather than
-whatever upstream published most recently, and so a changed or re-cut upstream
-asset fails the launch instead of executing new bytes quietly. A release that
-has changed under the pin reports both digests.
+`bin/lib/pins.json` names one fallback asset and digest per platform. Preparation
+can select a newer release from the same upstream repository; every selected
+archive must match its published SHA-256 digest before extraction and activation.
 
-Nothing is downloaded when the cache is warm. The first launch on a machine
+Ordinary serve, MCP, and stop calls reuse the verified cache. The first launch on a machine
 fetches tens of megabytes, so it takes a moment and says so on stderr; the
 package declares the `network` capability for that reason. Everything the
 launcher writes goes to stderr — for the `mcp` subcommand stdout is the MCP
@@ -66,11 +64,33 @@ driver, so it cannot collide with a driver subcommand. It exits 0 only when a
 verified driver is on disk, and exits 1 with the same named failures as any
 other invocation. It writes nothing to stdout.
 
-This package pins a release and does not follow upstream's newest one, and the
-driver has its own update check that announces a newer release on stderr at
-every start. That notice is upstream's, not this launcher's: what is running is
-still the pinned build whose digest was verified, until this package's pin
-moves.
+Preparation automatically checks for newer driver releases at most once every
+six hours, including failed attempts. It follows plain `cua-driver-rs-vX.Y.Z`
+tags, excluding drafts, nightlies, and suffixed prerelease versions. Upstream
+marks stable component releases with GitHub's prerelease flag to keep the
+monorepo's Latest pointer separate; that flag does not exclude a stable driver.
+The check scans up to three release pages and selects the highest version with
+an asset for this platform. Updates require a GitHub `sha256:` asset digest and
+the expected download URL under the configured upstream repository.
+
+The launcher downloads into staging, verifies the archive and extracted
+executable, then atomically records the selected release in
+`PLUGIN_DATA/driver/update.json`. Concurrent preparation calls share a lock;
+serve, MCP, and stop never check for updates or wait on that lock. Those calls
+use the same activated release. A failed check, download, digest, or installation
+keeps the previous verified selection, falling back to the built-in pin when
+there is no usable selection. Cache corruption triggers verification and repair.
+The override `OPENAGENT_CUA_DRIVER_BIN` bypasses updates entirely.
+
+A newer driver is activated when the host next prepares and starts the daemon.
+An already running daemon continues until its host stops it; the plugin does
+not restart a live session. Existing digest directories are retained so updates
+never delete another process's installation. Remove unused digest directories
+manually only after all driver processes have stopped. Updates do not change
+the plugin's version or its desktop authorization.
+Metadata checks have a 10-second budget and downloads a 120-second budget;
+preparation shares a 150-second transfer deadline across lock waiting, update,
+and fallback so it stays within the desktop host's provisioning deadline.
 
 ### It fails loudly, not silently
 

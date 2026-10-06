@@ -15,3 +15,12 @@ plugin's **Allow real computer access** authorization in OpenAgent settings.
 Never describe Cua as unconditionally unrestricted, and never add a second
 plugin-specific bypass. Without the user grant, the daemon must remain confined
 or fail closed.
+
+The launcher checks upstream driver updates only during `--openagent-prepare`,
+at most once per six hours, and activates only SHA-256-verified releases for the
+current platform. Serve, MCP and stop reuse that selection without checking the
+network. A failed update keeps the verified driver or uses the built-in pin;
+`OPENAGENT_CUA_DRIVER_BIN` bypasses provisioning and updating. The desktop host
+owns daemon restart and liveness: a running daemon changes versions on its next
+prepared start. Never kill or restart a live daemon from the plugin to update it.
+See the package README for release selection, cache recovery, and lock behavior.

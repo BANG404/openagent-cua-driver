@@ -1,6 +1,6 @@
 {
   "name": "openagent-cua-driver-plugin",
-  "version": "1.2.2",
+  "version": "1.3.0",
   "private": true,
   "type": "module",
   "description": "The OpenAgent Agent Plugin package that provides Cua desktop control.",
