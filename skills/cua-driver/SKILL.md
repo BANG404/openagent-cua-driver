@@ -46,3 +46,7 @@ or retrying the capture. Fix the destination or re-read without the export
 parameter; do not repeatedly submit the failing path. Existing permissions
 still apply. CLI calls that bypass MCP must create parents and use expanded
 absolute paths themselves. See the [upstream window-state contract](https://cua.ai/docs/cua-driver/reference/mcp-tools/window-state).
+
+The release packer's explicit file list must include `bin/lib/mcp-screenshots.mjs`.
+Package qualification includes extracting the archive and starting its launcher;
+source-directory validation alone cannot detect missing runtime imports.

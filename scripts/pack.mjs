@@ -31,6 +31,7 @@ const CONTENTS = [
   "bin/i18n.mjs",
   "bin/lib/archive.mjs",
   "bin/lib/openagent-host.mjs",
+  "bin/lib/mcp-screenshots.mjs",
   "bin/lib/platform.mjs",
   "bin/lib/provision.mjs",
   "bin/lib/update.mjs",
