@@ -5,8 +5,8 @@
  *
  * OpenAgent runs this file instead of a driver binary, under whatever command
  * line the host decided: `serve ...` to supervise a daemon, or `mcp ...` to
- * attach the reserved MCP client. This launcher's whole job is to put the
- * verified driver behind that command line.
+ * attach the reserved MCP client. The launcher puts the verified driver behind
+ * that command line and prepares explicit MCP screenshot export paths.
  *
  * The driver itself is not in this package. Upstream publishes one build per
  * platform. Preparation follows verified stable releases with a pinned fallback,
@@ -23,9 +23,8 @@
  * turns that into a step whose budget is about the network, and makes the
  * daemon's own start quick on every launch.
  *
- * Nothing may be written to stdout. For the `mcp` subcommand stdout is the MCP
- * transport, so a stray byte corrupts the protocol rather than printing a
- * diagnostic; every message this file produces goes to stderr.
+ * For the `mcp` subcommand stdout contains only MCP protocol messages; a stray
+ * diagnostic byte corrupts the transport. Operational notices go to stderr.
  */
 
 import { spawn } from "node:child_process";
@@ -33,6 +32,7 @@ import { spawn } from "node:child_process";
 import { readPins } from "./lib/provision.mjs";
 import { resolveDriver } from "./lib/update.mjs";
 import { createHostClient } from "./lib/openagent-host.mjs";
+import { bridgeMcpScreenshots } from "./lib/mcp-screenshots.mjs";
 import { defaultLocale, errorNotice, noticeText, requestLocale, translateNotice } from "./i18n.mjs";
 
 /** Fetch the driver and exit, instead of running it. */
@@ -99,10 +99,20 @@ if (args.includes(PREPARE)) {
   process.exit(0);
 }
 
+const isMcp = args[0] === "mcp";
 const child = spawn(executable, args, {
-  stdio: "inherit",
+  stdio: isMcp ? ["pipe", "pipe", "inherit"] : "inherit",
   windowsHide: true,
 });
+
+if (isMcp) {
+  void bridgeMcpScreenshots(child, { locale: currentLocale }).catch(async (error) => {
+    if (child.exitCode !== null || child.signalCode !== null) return;
+    console.error(errorNotice(error, await currentLocale()));
+    child.kill();
+    process.exitCode = 1;
+  });
+}
 
 child.on("error", async (error) => {
   const source = override ? "OPENAGENT_CUA_DRIVER_BIN" : "PLUGIN_DATA cache";

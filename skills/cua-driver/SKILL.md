@@ -24,3 +24,25 @@ network. A failed update keeps the verified driver or uses the built-in pin;
 owns daemon restart and liveness: a running daemon changes versions on its next
 prepared start. Never kill or restart a live daemon from the plugin to update it.
 See the package README for release selection, cache recovery, and lock behavior.
+
+## Screenshots
+
+For MCP window or desktop reads, omit `screenshot_out_file` by default: the
+driver returns the PNG as an image content block alongside window state. This
+avoids filesystem dependencies; do not invent temporary paths for routine reads.
+Use `include_screenshot:false` when only the accessibility tree is needed.
+
+When an exported PNG is required, the plugin's MCP launcher expands `~/` and
+`~\\`, creates the parent directory recursively, and passes an absolute path to
+the driver. Absolute paths retain their destination. Relative paths resolve
+under `<PLUGIN_DATA>/screenshots/`, independently of the daemon's working
+directory (outside OpenAgent without PLUGIN_DATA, the launcher's starting cwd
+is the base for `screenshots/`). Prefer absolute paths when another tool will
+read the file, and use the returned `screenshot_file_path`. Empty paths and
+Windows drive-relative paths such as `C:shot.png` are rejected.
+
+A parent-directory failure returns a localized tool error without closing MCP
+or retrying the capture. Fix the destination or re-read without the export
+parameter; do not repeatedly submit the failing path. Existing permissions
+still apply. CLI calls that bypass MCP must create parents and use expanded
+absolute paths themselves. See the [upstream window-state contract](https://cua.ai/docs/cua-driver/reference/mcp-tools/window-state).

@@ -101,6 +101,18 @@ with an error, an asset whose digest is not the pinned one, an archive that
 does not contain the driver, and a driver that will not start. Set
 `OPENAGENT_CUA_DRIVER_BIN` to run an existing driver through any of them.
 
+## Screenshot exports
+
+MCP reads return inline PNG images by default. For explicit
+`screenshot_out_file` exports on `get_window_state` and `get_desktop_state`, the
+launcher expands the home prefix, resolves an absolute path, and creates parent
+directories before forwarding the request. Relative paths use
+`PLUGIN_DATA/screenshots/`, so a different daemon working directory cannot
+change the destination. Outside OpenAgent without `PLUGIN_DATA`, they use
+`screenshots/` under the launcher's starting directory. Preparation failures
+return a localized tool error and leave MCP usable for the next call.
+The bundled Skill owns screenshot usage and recovery guidance.
+
 ## Language support
 
 The package declares English and Chinese in `plugin.json`. The launcher reads
