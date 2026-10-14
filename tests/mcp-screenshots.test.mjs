@@ -68,7 +68,7 @@ describe("MCP screenshot paths", () => {
 
   test("rejects empty paths and Windows drive-relative paths", async () => {
     const root = await fixture();
-    for (const path of ["", "  ", ...(process.platform === "win32" ? ["C:shot.png"] : [])]) {
+    for (const path of ["", "  ", ...(process.platform === "win32" ? ["C:", "C:shot.png"] : [])]) {
       await expect(prepareScreenshotRequest(request("get_window_state", path), { base: root }))
         .rejects.toMatchObject({ code: "EINVAL" });
     }

@@ -17,7 +17,7 @@ export async function prepareScreenshotRequest(message, { base, home = homedir()
       typeof args?.screenshot_out_file !== "string") return message;
 
   const requested = args.screenshot_out_file;
-  if (!requested.trim() || (process.platform === "win32" && /^[a-z]:[^\\/]/i.test(requested))) {
+  if (!requested.trim() || (process.platform === "win32" && /^[a-z]:(?![\\/])/i.test(requested))) {
     throw Object.assign(new Error("Invalid screenshot output path"), { code: "EINVAL" });
   }
   const expanded = requested === "~" ? home
