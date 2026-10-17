@@ -15,6 +15,8 @@ test("the installed archive includes all launcher imports and starts after extra
   const destination = mkdtempSync(join(tmpdir(), "cua-installed-"));
   try {
     extractBuffer(archive, "tar.gz", destination, "plugin.tar.gz");
+    expect(JSON.parse(readFileSync(join(destination, "mcp.json"), "utf8"))
+      .mcpServers.desktop.args).toContain("--direct");
     expect(readFileSync(join(destination, "bin", "lib", "mcp-screenshots.mjs"), "utf8"))
       .toContain("prepareScreenshotRequest");
     const installed = spawnSync(process.execPath, [join(destination, "bin", "cua-driver.mjs"), "--openagent-prepare"], {

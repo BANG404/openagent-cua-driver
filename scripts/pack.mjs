@@ -25,6 +25,7 @@ const repository = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 /** Exactly the files the installed package needs, in archive order. */
 const CONTENTS = [
   "plugin.json",
+  "mcp.json",
   "README.md",
   "LICENSE",
   "bin/cua-driver.mjs",

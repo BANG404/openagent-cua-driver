@@ -3,10 +3,10 @@
 /**
  * The Cua Driver launcher this package publishes.
  *
- * OpenAgent runs this file instead of a driver binary, under whatever command
- * line the host decided: `serve ...` to supervise a daemon, or `mcp ...` to
- * attach the reserved MCP client. The launcher puts the verified driver behind
- * that command line and prepares explicit MCP screenshot export paths.
+ * Root mcp.json runs this launcher with mcp --direct --embedded. The driver
+ * owns its runtime inside the MCP process, without a standalone application
+ * or host-supervised daemon. The launcher provisions the verified driver
+ * and prepares explicit MCP screenshot export paths.
  *
  * The driver itself is not in this package. Upstream publishes one build per
  * platform. Preparation follows verified stable releases with a pinned fallback,
@@ -73,7 +73,7 @@ async function driverPath(locale) {
     platform: process.platform,
     arch: process.arch,
     pins,
-    checkUpdates: process.argv.includes(PREPARE),
+    checkUpdates: process.argv.includes(PREPARE) || process.argv[2] === "mcp",
     log: (message) => {
       console.error(`[cua-driver] ${translateNotice(message, locale) ?? message}`);
     },
