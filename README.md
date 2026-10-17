@@ -1,4 +1,6 @@
-# OpenAgent Cua Driver
+# Desktop Control
+
+Let an agent take screenshots, click, and type in desktop apps after you grant computer access.
 
 This Agent Plugins 1.0 package declares its desktop-control server in root
 `mcp.json`. Install, authorize, test, enable, disable and remove it through the

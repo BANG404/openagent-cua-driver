@@ -1,8 +1,8 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "cua-driver",
-  "version": "2.0.0",
-  "description": "Desktop control through a standard MCP plugin, without a standalone application.",
+  "version": "2.0.1",
+  "description": "Let an agent take screenshots, click, and type in desktop apps after you grant computer access.",
   "license": "MIT",
   "repository": "https://github.com/BANG404/openagent-cua-driver",
   "keywords": [
@@ -27,8 +27,8 @@
         "default_locale": "en",
         "translations": {
           "en": {
-            "display_name": "Cua Driver",
-            "description": "Desktop control through a standard MCP plugin, without a standalone application.",
+            "display_name": "Desktop Control",
+            "description": "Let an agent take screenshots, click, and type in desktop apps after you grant computer access.",
             "notice.pluginData": "PLUGIN_DATA is not set, so this launcher has nowhere to keep the driver it downloads. The OpenAgent host exports it as the package's own writable directory; set it to a writable empty directory to run this package outside OpenAgent, or set OPENAGENT_CUA_DRIVER_BIN to a Cua Driver already on this machine.",
             "notice.unsupportedPlatform": "Cua Driver publishes no pinned release for {platform}. Pinned platforms: {supported}. Set OPENAGENT_CUA_DRIVER_BIN to a driver built for this machine to run one anyway.",
             "notice.pinnedTable": "The pinned table has no entry for '{platform}'. Pinned platforms: {supported}. Set OPENAGENT_CUA_DRIVER_BIN to a driver built for this machine to run one anyway.",
@@ -51,8 +51,8 @@
             "notice.screenshotPathFailed": "Cannot prepare screenshot output path {path} ({code}). Choose a writable file path, or omit screenshot_out_file to receive the image inline."
           },
           "zh": {
-            "display_name": "桌面控制",
-            "description": "通过标准 MCP 插件控制桌面，无需启动独立应用。",
+            "display_name": "桌面操作",
+            "description": "授权后，让智能体通过截图、点击和键盘输入操作桌面应用。",
             "notice.pluginData": "未设置 PLUGIN_DATA，启动器没有位置保存下载的驱动。OpenAgent 主机会将它设为插件专用的可写目录；若要在 OpenAgent 外运行，请将其设为可写的空目录，或将 OPENAGENT_CUA_DRIVER_BIN 设为本机已有的 Cua Driver 路径。",
             "notice.unsupportedPlatform": "Cua Driver 没有为 {platform} 提供固定版本。支持的平台：{supported}。若要在此设备运行，请将 OPENAGENT_CUA_DRIVER_BIN 指向为本机编译的驱动。",
             "notice.pinnedTable": "固定版本表中没有平台“{platform}”的条目。支持的平台：{supported}。若要在此设备运行，请将 OPENAGENT_CUA_DRIVER_BIN 指向为本机编译的驱动。",
