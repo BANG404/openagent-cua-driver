@@ -26,6 +26,23 @@ owns the ordinary MCP connection lifecycle: a running server changes versions
 on its next connection. Never restart a live MCP server to apply an update.
 See the package README for release selection, cache recovery, and lock behavior.
 
+## Opening a browser on Windows
+
+Do not combine an explicit browser `path` with `urls` in `launch_app`. The
+Windows driver launches the application separately, then opens `urls` through
+the system default browser. Choosing Edge while Chrome is the default therefore
+opens both. For the default browser, use `launch_app` with `urls` only. For a
+particular browser, launch it without `urls`, inspect its returned window, and
+navigate inside that same window using its address bar or an already prepared
+browser session. Verify the resulting window and page before reporting success.
+
+A `browser_prepare` refusal such as `browser_requires_setup` is not an app
+launch failure. Keep the existing browser window and use desktop controls, or
+follow the tool's explicit setup and approval requirements. Do not kill or
+relaunch a user's browser to retry preparation. Do not attribute an unexpected
+window to the user without execution evidence: a single tool call can launch
+additional processes through the operating system.
+
 ## Screenshots
 
 For MCP window or desktop reads, omit `screenshot_out_file` by default: the
